@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>ActivityPub Personal Places</title>
+    <script
+      src="https://www.w3.org/Tools/respec/respec-w3c"
+      class="remove"
+      defer
+    ></script>
+    <script class="remove">
+      // All config options at https://respec.org/docs/
+      var respecConfig = {
+        specStatus: "CG-DRAFT",
+        editors: [
+          {
+            name: "Evan Prodromou",
+            url: "https://socialwebfoundation.org/authors/evanprodromou",
+          },
+        ],
+        github: "swicg/geosocial",
+        shortName: "ap-personal-places",
+        xref: "web-platform",
+        group: "socialcg",
+      };
+    </script>
+  </head>
+  <body>
+    <section id="abstract">
+      <p>
+        This report describes an API for creating and maintaining a list of an
+        actor&apos;s personal places.
+      </p>
+    </section>
+    <section id="sotd">
+      <p>This is required.</p>
+    </section>
+    <section class="informative">
+      <h2>Introduction</h2>
+      <p>
+        Geosocial software lets people sharing information about their
+        relationship with places. Activity Streams 2.0 defines a
+        <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-place"
+          >Place</a
+        >
+        object type for representing places.
+      </p>
+      <p>
+        Places can be defined globally as part of a geographical vocabulary. For example, <a href="https://places.pub/">places.pub</a> is a server that provides places from the <a href="https://openstreetmap.org/">OpenStreetMap</a> service in ActivityPub format. These places are a shared resource for all ActivityPub users.
+      </p>
+      <p>
+        Some geosocial software lets users define personal places, like &quot;Home&quot;, &quot;Work&quot;, &quot;School&quot;, &quot;Favourite Tree&quot; or &quot;Mom&apos;s House&quot;. These places may be identical to places defined in a public vocabulary, with different and more personal names, images, and descriptions, or they may be distinct from any publicly-defined place.
+      </p>
+      <p>
+        This document defines how personal places can be created and managed ActivityPub.
+      </p>
+      <section>
+        <h3>User stories</h3>
+        <p>This specification addresses the following user stories.</p>
+        <p class="issue" data-number="21">
+          As an ActivityPub user, I'd like to create a place that is important in my own life, so that I can check in, share, comment on, or otherwise engage with the place.
+        </p>
+        <p class="issue" data-number="25">
+          As an ActivityPub user, I want to read the information about a friend's personal place, so that I can understand where she is checking into and what it means to her.
+        </p>
+        <p class="issue" data-number="23">
+          As an ActivityPub user, I want to edit a place, so I can update its location or metadata.
+        </p>
+        <p class="issue" data-number="24">
+          As an ActivityPub user, I want to delete a place I created, so it's no longer visible to anyone.
+        </p>
+        <p class="issue" data-number="22">
+          As an ActivityPub user, I want to get a list of the places that I've created, so I can find one that I'm interested in.
+        </p>
+      </section>
+    </section>
+    <section>
+      <h2>Creating a Place</h2>
+      <p>
+        To create a new place, the actor uses the ActivityPub social API. The client posts a <a href="https://www.w3.org/TR/activitypub/#create-activity-outbox">Create</a> activity to their own outbox, with a <code>Place</code> object as the <code>object</code> property.
+      </p>
+      <aside class="example">
+        <p>In this example, the user is creating a place representing their home. They have used the lat/lon for the Mont Royal metro station in Montreal, and used the <code>radius</code> property to show that the place is within 500m of that landmark. A geosocial UI might show a circle for the range where the place might be.</p>
+        <pre class="json">
+          {
+            "@context": "https://www.w3.org/ns/activitystreams",
+            "type": "Create",
+            "to": "as:Public",
+            "summary": "Evan created the personal place 'Home'"
+            "object": {
+              "type": "Place",
+              "name": "Home",
+              "summary": "My home in Plateau Mont-Royal",
+              "lat": 45.5245985,
+              "lon": 73.5816468,
+              "radius": 500,
+              "units": "m"
+            }
+          }
+        </pre>
+      </aside>
+      <aside class="example">
+        <p>In this example, the user creates a place representing their workplace. They restrict access to their followers. Because they work at the <a href="https://ecto.coop/">Ecto Coworking</a>, they use the <code>alsoKnownAs</code> property to note that these are the same place.</p>
+        <pre class="json">
+          {
+            "@context": "https://www.w3.org/ns/activitystreams",
+            "type": "Create",
+            "to": "https://social.example/user/evan/followers",
+            "summary": "Evan created the personal place 'Work'"
+            "object": {
+              "type": "Place",
+              "name": "Work",
+              "latitude": 45.52682,
+              "longitude": -73.58012,
+              "alsoKnownAs": "https://places.pub/node/3313351996"
+            }
+          }
+        </pre>
+      </aside>
+    </section>
+    <section>
+      <h2>Reading a Place</h2>
+      <p>
+        Like other ActivityPub objects, <code>Place</code> objects can be read using the <a href="https://www.w3.org/TR/activitypub/#obj-id">id</a> property.
+      </p>
+      <aside class="example">
+        <p>In this example, the user has received a place id <code>https://social.example/users/evan/place/33</code>. They use an HTTP GET request to fetch the ActivityPub Place object.</p>
+        <pre class="http">
+          GET /users/evan/place/33 HTTP/1.1
+          Host: social.example
+
+          200 OK
+          Content-Type: application/activity+json
+
+          {
+            "@context": "https://www.w3.org/ns/activitystreams",
+            "id": "https://social.example/users/evan/place/33",
+            "type": "Place",
+            "name": "Home",
+            "summary": "My home in Plateau Mont-Royal",
+            "lat": 45.5245985,
+            "lon": 73.5816468,
+            "radius": 500,
+            "units": "m",
+            "to": "as:Public",
+            "attributedTo": "https://social.example/users/evan"
+          }
+        </pre>
+      </aside>
+    </section>
+    <section>
+      <h2>Editing a Place</h2>
+      <p>
+        To edit a place, the actor uses the ActivityPub social API. The client posts a <a href="https://www.w3.org/TR/activitypub/#update-activity-outbox">Update</a> activity to their own outbox, with an existing <code>Place</code> object as the <code>object</code> property.
+      </p>
+      <aside class="example">
+        <p>In this example, the user is changing the description of a place they have previously created, and adding an image (managed separately).</p>
+        <pre class="json">
+          {
+            "@context": "https://www.w3.org/ns/activitystreams",
+            "type": "Update",
+            "to": "as:Public",
+            "summary": "Evan updated the personal place 'Home'"
+            "object": {
+              "id": "https://social.example/users/evan/place/33",
+              "summary": "My house in Montreal",
+              "image": {
+                "type": "Link",
+                "name": "Front view of my house",
+                "href": "https://files.social.example/11837.jpg"
+              }
+            }
+          }
+        </pre>
+      </aside>
+    </section>
+    <section>
+      <h2>Deleting a Place</h2>
+      <p>
+        To delete a place, the actor uses the ActivityPub social API. The client posts a <a href="https://www.w3.org/TR/activitypub/#delete-activity-outbox">Delete</a> activity to their own outbox, with an existing <code>Place</code> object as the <code>object</code> property.
+      </p>
+      <aside class="example">
+        <p>In this example, the user deletes the <code>https://social.example/users/evan/place/33</code>.</p>
+        <pre class="json">
+          {
+            "@context": "https://www.w3.org/ns/activitystreams",
+            "type": "Delete",
+            "to": "as:Public",
+            "summary": "Evan deleted the personal place 'Home'"
+            "object": "https://social.example/users/evan/place/33"
+          }
+        </pre>
+      </aside>
+      <aside class="example">
+        <p>In this example, the user has received a place id <code>https://social.example/users/evan/place/33</code>. They use an HTTP GET request to fetch the ActivityPub Place object. Because it has been deleted, only a <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-tombstone">Tombstone</a> object is returned.</p>
+        <pre class="http">
+          GET /users/evan/place/33 HTTP/1.1
+          Host: social.example
+
+          410 Gone
+          Content-Type: application/activity+json
+
+          {
+            "@context": "https://www.w3.org/ns/activitystreams",
+            "id": "https://social.example/users/evan/place/33",
+            "type": "Tombstone",
+            "formerType": "Place"
+          }
+        </pre>
+      </aside>
+    </section>
+    <section>
+      <h2>Listing Personal Places</h2>
+      <p>
+        The actor&apos;s personal places can be listed in an ActivityPub <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-orderedcollection">OrderedCollection</a>. The collection is ordered in reverse chronological order, with the newest places first.
+      </p>
+      <p>
+        The actor object can have a <code>places</code> property to indicate the user's places.
+      </p>
+      <p>
+        The collection can have a <code>placesOf</code> property to the actor whose places these are.
+      </p>
+      <aside class="example">
+        <p>In this example, an actor has an associated collection of places.</p>
+        <pre class="json">
+          {
+            "@context": [
+              "https://www.w3.org/ns/activitystreams",
+              "https://swicg.github.io/geosocial/geosocial"
+            ],
+            "type": "Person",
+            "id": "https://social.example/user/evan",
+            "inbox": "https://social.example/user/evan/inbox",
+            "outbox": "https://social.example/user/evan/outbox",
+            "following": "https://social.example/user/evan/following",
+            "followers": "https://social.example/user/evan/followers",
+            "liked": "https://social.example/user/evan/liked",
+            "places": "https://social.example/user/evan/places",
+          }
+        </pre>
+      </aside>
+      <aside class="example">
+        <p>This is a user&apos;s collection of places. It uses the <code>placesOf</code> property to declare its relationship to the user. One place is included with a brief embedded object; the other is included only as an URL.</p>
+        <pre class="json">
+          {
+            "@context": [
+              "https://www.w3.org/ns/activitystreams",
+              "https://swicg.github.io/geosocial/geosocial"
+            ],
+            "type": "OrderedCollection",
+            "id": "https://social.example/user/evan/places",
+            "to": "as:Public",
+            "attributedTo": "https://social.example/user/evan",
+            "placesOf": "https://social.example/user/evan",
+            "totalItems": 2,
+            "items": [
+              {
+                "type": "Place",
+                "id": "https://social.example/user/evan/place/33",
+                "name": "Home"
+              },
+              "https://social.example/user/evan/place/34"
+            ]
+          }
+        </pre>
+      </aside>
+    </section>
+    <section>
+      <h2>Terms</h2>
+      <p>There are two new terms defined by this specification. The context document is at <code>https://swicg.github.io/geosocial/geosocial</code>.</p>
+      <section id="places" data-dfn-for="places">
+        <h3>places</h3>
+        <table>
+          <tbody>
+            <tr>
+              <td width="10%">
+                URI:
+              </td>
+              <td>
+                <code>https://swicg.github.io/geosocial/geosocial#places</code><br>
+                <code>geosocial:places</code><br>
+                <code>places</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Notes:
+              </td>
+              <td>
+                The property value is an <code>OrderedCollection</code> of <code>Place</code> objects.
+              </td>
+            </tr>
+            <tr>
+              <td>Domain:</td>
+              <td><code>Object</code> (an ActivityPub <a href="https://www.w3.org/TR/activitypub/#actors">Actor</a>)</td>
+            </tr>
+            <tr>
+              <td>Range:</td>
+              <td><code>OrderedCollection</code></td>
+            </tr>
+            <tr>
+              <td>Functional:</td>
+              <td><code>true</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <section id="places" data-dfn-for="places">
+        <h3>placesOf</h3>
+        <table>
+          <tbody>
+            <tr>
+              <td width="10%">
+                URI:
+              </td>
+              <td>
+                <code>https://swicg.github.io/geosocial/geosocial#placesOf</code><br>
+                <code>geosocial:placesOf</code><br>
+                <code>placesOf</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Notes:
+              </td>
+              <td>
+                The property value is an ActivityPub actor for which the collection is the <code>places</code> collection.
+              </td>
+            </tr>
+            <tr>
+              <td>Domain:</td>
+              <td><code>OrderedCollection</code></td>
+            </tr>
+            <tr>
+              <td>Range:</td>
+              <td><code>Object</code> (an ActivityPub <a href="https://www.w3.org/TR/activitypub/#actors">Actor</a>)</td>
+            </tr>
+            <tr>
+              <td>Functional:</td>
+              <td><code>true</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </section>
+    <section id="conformance">
+      <p>This is required for specifications that contain normative material.</p>
+    </section>
+  </body>
+</html>

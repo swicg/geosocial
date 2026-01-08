@@ -1,0 +1,13 @@
+{
+  "@context": {
+    "geosocial": "https://swicg.github.io/geosocial/geosocial#",
+    "places": {
+      "@id": "geosocial:places",
+      "@type": "@id"
+    },
+    "placesOf": {
+      "@reverse": "geosocial:places",
+      "@type": "@id"
+    }
+  }
+}
