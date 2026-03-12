@@ -200,8 +200,7 @@ Activity objects also inherit all attributes from the core object, including
 
 Many thanks for valuable feedback and advice from:
 
-- [Person 1]
-- [Person 2]
+- W3C Social Working Group community members
 
 Thanks to the following proposals, projects, libraries, frameworks, and languages for their work on similar problems that influenced this proposal.
 
