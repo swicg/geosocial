@@ -49,14 +49,46 @@
     </p>
   </section>
 
+  <section id='introduction'>
+    <p>
+      <a href="https://www.w3.org/TR/activitystreams-vocabulary/#microsyntaxes">Microsyntaxes</a> let users with
+      constrained composition environments add structured data to an Activity Streams 2.0 object with minimal input
+      overhead. Examples include using the <code>@</code> symbol to add a <a
+        href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-mention">Mention</a>, and the <code>#</code> symbox
+      to add a <a href="https://swicg.github.io/miscellany/#Hashtag">Hashtag</a>.
+    </p>
+    <p>
+      Microsyntaxes have the benefit that users can start using them as a social convention, with no effect on data
+      storage or presentation, which is later adopted by software developers. Besides the mention and the hashtag,
+      "cashtags", "retweets" and other social conventions began in this way.
+    </p>
+    <p>
+      This document introduces two microsyntaxes for attaching location information to an ActivityPub object. Several
+      notations were considered, including <a href="https://www.what3words.com/">what3words</a> and <a
+        href="https://www.mapcode.com/">MapCode</a>, but licensing issues make those notation formats incompatible with
+      an open standards process.
+    </p>
+    <p>
+      When geographic microsyntax is added to source text for an object, it can be result in modifications to object
+      itself. The second section describes how social microsyntax can affect the <code>content</code> and/or
+      <code>location</code> properties of an ActivityPub object.
+    </p>
+    <p>
+      Of course, the geographical microsyntax may not be used by the creator&apos;s client or server to modify the
+      object. The receiver&apos;s client, or even a third-party data aggregator, can use the microsyntax directly
+      instead.
+    </p>
+  </section>
+
   <section id="microsyntax">
-    <h2>Geographical microsyntax options</h2>
+    <h2>Geographical microsyntax</h2>
 
     <section id="openlocationcodes">
       <h3>Open Location Codes</h3>
 
       <p><strong>Plus Codes</strong>, also called <strong>Open Location Codes</strong>, are a format for encoding
-        lat/lon pairs efficiently. The algorithm was developed by Google and released under the Apache license.</p>
+        lat/lon pairs efficiently. The algorithm was developed by Google and released under the Apache license. Plus
+        Codes encode latitude-longitude pairs.</p>
 
       <table>
         <tr>
@@ -92,108 +124,27 @@
       </table>
     </section>
 
-    <section id="what3words">
-      <h3>what3words</h3>
-
-      <p>what3words is a proprietary notation provided by what3words Limited.</p>
-
-      <table>
-        <tr>
-          <td>Documentation</td>
-          <td><a href="https://developer.what3words.com/public-api">what3words API</a></td>
-        </tr>
-        <tr>
-          <td>Pattern(s)</td>
-          <td>"///" + word + "." + word + "." + word (words are lowercase ascii letters only)</td>
-        </tr>
-        <tr>
-          <td>Examples</td>
-          <td>
-            <ul>
-              <li>///brick.camp.colleague</li>
-              <li>///warns.booed.snoring</li>
-            </ul>
-          </td>
-        </tr>
-        <tr>
-          <td>Web page URI template</td>
-          <td>https://what3words.com/{threewords}</td>
-        </tr>
-        <tr>
-          <td>ActivityPub object URI template</td>
-          <td>(none)</td>
-        </tr>
-      </table>
-    </section>
-
-    <section id="mapcode">
-      <h3>Mapcode</h3>
-
-      <p>
-        Mapcode is a patented notation provided by the Mapcode Foundation, a Netherlands non-profit. They are free for
-        non-commercial use.
-      </p>
-
-      <table>
-        <tr>
-          <td>Documentation</td>
-          <td><a href="https://www.mapcode.com/about">About Mapcodes</a></td>
-        </tr>
-        <tr>
-          <td>Pattern(s)</td>
-          <td>
-            <ul>
-              <li>(letters and numbers) "." (letters and numbers)</li>
-              <li>(country name) " " (letters and numbers) "." (letters and numbers)</li>
-              <li>(3-letter ISO 3166-1 code) " " (letters and numbers) "." (letters and numbers)</li>
-              <li>(Unprefixed ISO 3166-2 code) " " (letters and numbers) "." (letters and numbers)</li>
-              <li>(Prefixed ISO 3166-2 code) " " (letters and numbers) "." (letters and numbers)</li>
-            </ul>
-          </td>
-        </tr>
-        <tr>
-          <td>Examples</td>
-          <td>
-            <ul>
-              <li>49.4V</li>
-              <li>Netherlands 49.4V</li>
-              <li>NLD 49.4V</li>
-              <li>DC 18.JQZ</li>
-              <li>US-DC 18.JQZ</li>
-            </ul>
-          </td>
-        </tr>
-        <tr>
-          <td>Web page URI template</td>
-          <td>https://plus.codes/{threewords}</td>
-        </tr>
-        <tr>
-          <td>ActivityPub object URI template</td>
-          <td>(none)</td>
-        </tr>
-      </table>
-
-    </section>
-
     <section id="l-prefix">
-      <h3>L: prefix</h3>
+      <h3>OpenStreetMap identifiers</h3>
 
       <p>
-        This notation identifies a location with natural language. It was proposed as part of the Microsyntax.org
-        effort.
+        OpenStreetMap is a user-generated world-wide map. It represents places as points (&quot;nodes&quot;), lines
+        (&quot;ways&quot;), and polygons (&quot;relations&quot;). The data is available under the <a
+          href="https://opendatacommons.org/licenses/odbl/">Open Data Commons Open Database License</a>.
       </p>
-
 
       <table>
         <tr>
           <td>Documentation</td>
-          <td>N/A</td>
+          <td><a href="https://wiki.openstreetmap.org/wiki/Elements">Elements</a></td>
         </tr>
         <tr>
           <td>Pattern(s)</td>
           <td>
             <ul>
-              <li>"L:" + (natural language location description)</li>
+              <li>"N" + (number)</li>
+              <li>"R" + (number)</li>
+              <li>"W" + (number)</li>
             </ul>
           </td>
         </tr>
@@ -201,18 +152,19 @@
           <td>Examples</td>
           <td>
             <ul>
-              <li>L:San Francisco</li>
-              <li>L:London, UK</li>
+              <li>N2598721627</li>
+              <li>W5013364</li>
+              <li>R2689445</li>
             </ul>
           </td>
         </tr>
         <tr>
           <td>Web page URI template</td>
-          <td>(none)</td>
+          <td>https://www.openstreetmap.org/{type}/{number}</td>
         </tr>
         <tr>
           <td>ActivityPub object URI template</td>
-          <td>(none)</td>
+          <td>https://places.pub/{type}/{number}</td>
         </tr>
       </table>
 
@@ -230,11 +182,15 @@
     <section id="link">
       <h3>Linking</h3>
 
-      <p>Clients or servers can convert patterns that match geographic microsyntax into a link to the Web page for that
-        location.</p>
+      <p>
+        Clients or servers can convert patterns that match geographic microsyntax into a link to the Web page for that
+        location. The text of the link can be the geographical microsyntax, or it could be the name of the place.
+      </p>
 
-      <p>This conversion can be done on the sending end, from the server or client that creates the text. Alternately,
-        it can be done on the receiving end.</p>
+      <p>
+        This conversion can be done on the sending end, from the server or client that creates the text. Alternately,
+        it can be done on the receiving end.
+      </p>
 
       <aside class="example">
         <p>Consider the following input microsyntax.</p>
@@ -244,6 +200,17 @@
         <p>It could be converted to the following HTML:</p>
         <pre class="html">
         I am at &lt;a href="https://plus.codes/87Q8GC37+86"&gt;87Q8GC37+86&lt;/a&gt;
+      </pre>
+      </aside>
+
+      <aside class="example">
+        <p>Consider the following input microsyntax.</p>
+        <pre class="text">
+        Wow, that was a tough climb! N4338669222
+      </pre>
+        <p>It could be converted to the following HTML:</p>
+        <pre class="html">
+        Wow, that was a tough climb! &lt;a href="https://openstreetmap.com/node/4338669222"&gt;Half Dome&lt;/a&gt;
       </pre>
       </aside>
     </section>
@@ -260,7 +227,7 @@
         <pre class="text">
         I am at 87Q8GC37+86
       </pre>
-        <p>It could be converted to the following ActivityPub object:</p>
+        <p>It could be converted to the following ActivityPub object. Note that the <code>Place</code> generated is anonymous.</p>
         <pre class="json">
         {
           "@context": [
@@ -278,6 +245,34 @@
             "lat": 45.503312,
             "lon": -73.586938,
             "plusCode": "87Q8GC37+86"
+          }
+        }
+      </pre>
+      </aside>
+
+
+      <aside class="example">
+        <p>Consider the following input microsyntax.</p>
+        <pre class="text">
+         Wow, that was a tough climb! N4338669222
+      </pre>
+        <p>It could be converted to the following ActivityPub object.</p>
+        <pre class="json">
+        {
+          "@context": [
+            "https://www.w3.org/ns/activitystreams",
+            "https://swicg.github.io/geosocial/geosocial"
+          ],
+          "id": "https://social.example/note/67890",
+          "type": "Note",
+          "source": {
+            "content": "Wow, that was a tough climb! N4338669222"
+          },
+          "content": "Wow, that was a tough climb! &lt;a href="https://openstreetmap.com/node/4338669222"&gt;Half Dome&lt;/a&gt;"
+          "location": {
+            "type": "Place",
+            "name": "Half Dome",
+            "id": "https://places.pub/node/4338669222"
           }
         }
       </pre>
