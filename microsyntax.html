@@ -219,7 +219,7 @@
       <h3><code>location</code> property</h3>
 
       <p>The location defined in the microsyntax can be converted to an Activity Streams <code>Place</code> object, and
-        embedded in the <code>location</code> property of the encoding object. The <code>Place</code> object can have a
+        embedded in the <code>location</code> property of the encoding object. The <code>Place</code> object can have <code>id</code> or <code>url</code> properties.
       </p>
 
       <aside class="example">
@@ -244,7 +244,11 @@
             "type": "Place",
             "lat": 45.503312,
             "lon": -73.586938,
-            "plusCode": "87Q8GC37+86"
+            "plusCode": "87Q8GC37+86",
+            "url": {
+              "type": "Link",
+              "href": "https://plus.codes/87Q8GC37+86"
+            }
           }
         }
       </pre>
