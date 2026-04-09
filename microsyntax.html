@@ -1,134 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset='utf-8'>
   <title>Geographical Microsyntax</title>
   <script src='https://www.w3.org/Tools/respec/respec-w3c' async class='remove'></script>
   <script class='remove'>
     // All config options at https://respec.org/docs/
-      var respecConfig = {
-        specStatus: "CG-DRAFT",
-        editors: [
-          {
-            name: "Evan Prodromou",
-            url: "https://socialwebfoundation.org/authors/evanprodromou",
-          },
-        ],
-        github: "swicg/geosocial",
-        shortName: "ap-geo-microsyntax",
-        xref: "web-platform",
-        group: "socialcg",
-      };
-    </script>
+    var respecConfig = {
+      specStatus: "CG-DRAFT",
+      editors: [
+        {
+          name: "Evan Prodromou",
+          url: "https://socialwebfoundation.org/authors/evanprodromou",
+        },
+      ],
+      github: "swicg/geosocial",
+      shortName: "ap-geo-microsyntax",
+      xref: "web-platform",
+      group: "socialcg",
+    };
+  </script>
   <style>
-    table td,
-    table td * {
+    table {
+      border-collapse: collapse;
+    }
+
+    table td {
       vertical-align: top;
+      border: 1px solid black;
+      padding: 6px 8px;
     }
   </style>
 </head>
+
 <body>
-<h1 id="title">Geographical Microsyntax</h1>
-<section id='abstract'>
-  <p>
-    This document identifies several geographical notation formats that may be appropriate as microsyntax for geosocial applications. It lists and describes each such format. It also provides guidance on how to apply microsyntax to ActivityPub content and objects.
-  </p>
-</section>
-<section id='sotd'>
-  <p>
-    This is an experimental specification and is undergoing regular revisions.
-  </p>
-</section>
-
-<section id="microsyntax">
-  <h2>Geographical microsyntax options</h2>
-
-  <section id="openlocationcodes">
-    <h3>Open Location Codes</h3>
-
-    <p><strong>Plus Codes</strong>, also called <strong>Open Location Codes</strong>, are a format for encoding lat/lon pairs efficiently. The algorithm was developed by Google and released under the Apache license.</p>
-
-    <table>
-      <tr>
-        <td>Documentation</td>
-        <td><a href="https://maps.google.com/pluscodes/">Plus Codes</a></td>
-      </tr>
-      <tr>
-        <td>Pattern(s)</td>
-        <td><ul>
-          <li>10 or more letters and numbers joined by a "+"</li>
-          <li>6 or more letters and numbers joined by a "+", followed by a comma-separated location identifier</li>
-        </ul></td>
-      </tr>
-    <tr>
-        <td>Examples</td>
-        <td>
-          <ul>
-            <li>87C4VXQ7+QV</li>
-            <li>GV3C+8X, London, United Kingdom</li>
-          </ul>
-        </td>
-      </tr>
-      <tr>
-        <td>Web page URI template</td>
-        <td>https://plus.codes/{pluscode}</td>
-      </tr>
-      <tr>
-        <td>ActivityPub object URI template</td>
-        <td>(none)</td>
-      </tr>
-    </table>
-  </section>
-
-  <section id="what3words">
-    <h3>what3words</h3>
-
-    <p>what3words is a proprietary notation provided by what3words Limited.</p>
-
-    <table>
-      <tr>
-        <td>Documentation</td>
-        <td><a href="https://developer.what3words.com/public-api">what3words API</a></td>
-      </tr>
-      <tr>
-        <td>Pattern(s)</td>
-        <td>"///" + word + "." + word + "." + word (words are lowercase ascii letters only)</td>
-      </tr>
-    <tr>
-        <td>Examples</td>
-        <td>
-          <ul>
-            <li>///brick.camp.colleague</li>
-            <li>///warns.booed.snoring</li>
-          </ul>
-        </td>
-      </tr>
-      <tr>
-        <td>Web page URI template</td>
-        <td>https://what3words.com/{threewords}</td>
-      </tr>
-      <tr>
-        <td>ActivityPub object URI template</td>
-        <td>(none)</td>
-      </tr>
-    </table>
-  </section>
-
-  <section id="mapcode">
-    <h3>Mapcode</h3>
-
+  <h1 id="title">Geographical Microsyntax</h1>
+  <section id='abstract'>
     <p>
-      Mapcode is a patented notation provided by the Mapcode Foundation, a Netherlands non-profit. They are free for non-commercial use.
+      This document identifies several geographical notation formats that may be appropriate as microsyntax for
+      geosocial applications. It lists and describes each such format. It also provides guidance on how to apply
+      microsyntax to ActivityPub content and objects.
     </p>
+  </section>
+  <section id='sotd'>
+    <p>
+      This is an experimental specification and is undergoing regular revisions.
+    </p>
+  </section>
 
-    <table>
-      <tr>
-        <td>Documentation</td>
-        <td><a href="https://www.mapcode.com/about">About Mapcodes</a></td>
-      </tr>
-      <tr>
-        <td>Pattern(s)</td>
-        <td>
+  <section id="microsyntax">
+    <h2>Geographical microsyntax options</h2>
+
+    <section id="openlocationcodes">
+      <h3>Open Location Codes</h3>
+
+      <p><strong>Plus Codes</strong>, also called <strong>Open Location Codes</strong>, are a format for encoding
+        lat/lon pairs efficiently. The algorithm was developed by Google and released under the Apache license.</p>
+
+      <table>
+        <tr>
+          <td>Documentation</td>
+          <td><a href="https://maps.google.com/pluscodes/">Plus Codes</a></td>
+        </tr>
+        <tr>
+          <td>Pattern(s)</td>
+          <td>
+            <ul>
+              <li>10 or more letters and numbers joined by a "+"</li>
+              <li>6 or more letters and numbers joined by a "+", followed by a comma-separated location identifier</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>Examples</td>
+          <td>
+            <ul>
+              <li>87C4VXQ7+QV</li>
+              <li>GV3C+8X, London, United Kingdom</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>Web page URI template</td>
+          <td>https://plus.codes/{pluscode}</td>
+        </tr>
+        <tr>
+          <td>ActivityPub object URI template</td>
+          <td>(none)</td>
+        </tr>
+      </table>
+    </section>
+
+    <section id="what3words">
+      <h3>what3words</h3>
+
+      <p>what3words is a proprietary notation provided by what3words Limited.</p>
+
+      <table>
+        <tr>
+          <td>Documentation</td>
+          <td><a href="https://developer.what3words.com/public-api">what3words API</a></td>
+        </tr>
+        <tr>
+          <td>Pattern(s)</td>
+          <td>"///" + word + "." + word + "." + word (words are lowercase ascii letters only)</td>
+        </tr>
+        <tr>
+          <td>Examples</td>
+          <td>
+            <ul>
+              <li>///brick.camp.colleague</li>
+              <li>///warns.booed.snoring</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>Web page URI template</td>
+          <td>https://what3words.com/{threewords}</td>
+        </tr>
+        <tr>
+          <td>ActivityPub object URI template</td>
+          <td>(none)</td>
+        </tr>
+      </table>
+    </section>
+
+    <section id="mapcode">
+      <h3>Mapcode</h3>
+
+      <p>
+        Mapcode is a patented notation provided by the Mapcode Foundation, a Netherlands non-profit. They are free for
+        non-commercial use.
+      </p>
+
+      <table>
+        <tr>
+          <td>Documentation</td>
+          <td><a href="https://www.mapcode.com/about">About Mapcodes</a></td>
+        </tr>
+        <tr>
+          <td>Pattern(s)</td>
+          <td>
             <ul>
               <li>(letters and numbers) "." (letters and numbers)</li>
               <li>(country name) " " (letters and numbers) "." (letters and numbers)</li>
@@ -136,11 +149,11 @@
               <li>(Unprefixed ISO 3166-2 code) " " (letters and numbers) "." (letters and numbers)</li>
               <li>(Prefixed ISO 3166-2 code) " " (letters and numbers) "." (letters and numbers)</li>
             </ul>
-        </td>
-      </tr>
-    <tr>
-        <td>Examples</td>
-        <td>
+          </td>
+        </tr>
+        <tr>
+          <td>Examples</td>
+          <td>
             <ul>
               <li>49.4V</li>
               <li>Netherlands 49.4V</li>
@@ -148,102 +161,107 @@
               <li>DC 18.JQZ</li>
               <li>US-DC 18.JQZ</li>
             </ul>
-        </td>
-      </tr>
-      <tr>
-        <td>Web page URI template</td>
-        <td>https://plus.codes/{threewords}</td>
-      </tr>
-      <tr>
-        <td>ActivityPub object URI template</td>
-        <td>(none)</td>
-      </tr>
-    </table>
+          </td>
+        </tr>
+        <tr>
+          <td>Web page URI template</td>
+          <td>https://plus.codes/{threewords}</td>
+        </tr>
+        <tr>
+          <td>ActivityPub object URI template</td>
+          <td>(none)</td>
+        </tr>
+      </table>
 
-  </section>
+    </section>
 
-  <section id="l-prefix">
-    <h3>L: prefix</h3>
+    <section id="l-prefix">
+      <h3>L: prefix</h3>
 
-    <p>
-      This notation identifies a location with natural language. It was proposed as part of the Microsyntax.org effort.
-    </p>
+      <p>
+        This notation identifies a location with natural language. It was proposed as part of the Microsyntax.org
+        effort.
+      </p>
 
 
-    <table>
-      <tr>
-        <td>Documentation</td>
-        <td>N/A</td>
-      </tr>
-      <tr>
-        <td>Pattern(s)</td>
-        <td>
+      <table>
+        <tr>
+          <td>Documentation</td>
+          <td>N/A</td>
+        </tr>
+        <tr>
+          <td>Pattern(s)</td>
+          <td>
             <ul>
               <li>"L:" + (natural language location description)</li>
             </ul>
-        </td>
-      </tr>
-    <tr>
-        <td>Examples</td>
-        <td>
+          </td>
+        </tr>
+        <tr>
+          <td>Examples</td>
+          <td>
             <ul>
               <li>L:San Francisco</li>
               <li>L:London, UK</li>
             </ul>
-        </td>
-      </tr>
-      <tr>
-        <td>Web page URI template</td>
-        <td>(none)</td>
-      </tr>
-      <tr>
-        <td>ActivityPub object URI template</td>
-        <td>(none)</td>
-      </tr>
-    </table>
+          </td>
+        </tr>
+        <tr>
+          <td>Web page URI template</td>
+          <td>(none)</td>
+        </tr>
+        <tr>
+          <td>ActivityPub object URI template</td>
+          <td>(none)</td>
+        </tr>
+      </table>
+
+    </section>
 
   </section>
 
-</section>
+  <section>
+    <h2>Applying microsyntax to ActivityPub objects</h2>
 
-<section>
-  <h2>Applying microsyntax to ActivityPub objects</h2>
+    <p>
+      This section describes ways that ActivityPub applications can apply geographical microsyntax.
+    </p>
 
-  <p>
-    This section describes ways that ActivityPub applications can apply geographical microsyntax.
-  </p>
+    <section id="link">
+      <h3>Linking</h3>
 
-  <section id="link">
-    <h3>Linking</h3>
+      <p>Clients or servers can convert patterns that match geographic microsyntax into a link to the Web page for that
+        location.</p>
 
-    <p>Clients or servers can convert patterns that match geographic microsyntax into a link to the Web page for that location.</p>
+      <p>This conversion can be done on the sending end, from the server or client that creates the text. Alternately,
+        it can be done on the receiving end.</p>
 
-    <p>This conversion can be done on the sending end, from the server or client that creates the text. Alternately, it can be done on the receiving end.</p>
-
-    <aside class="example">
-      <p>Consider the following input microsyntax.</p>
-      <pre class="text">
+      <aside class="example">
+        <p>Consider the following input microsyntax.</p>
+        <pre class="text">
         I am at 87Q8GC37+86
       </pre>
-      <p>It could be converted to the following HTML:</p>
-      <pre class="html">
+        <p>It could be converted to the following HTML:</p>
+        <pre class="html">
         I am at &lt;a href="https://plus.codes/87Q8GC37+86"&gt;87Q8GC37+86&lt;/a&gt;
       </pre>
-    </aside>
-  </section>
+      </aside>
+    </section>
 
-  <section id="location">
-    <h3><code>location</code> property</h3>
+    <section id="location">
+      <h3><code>location</code> property</h3>
 
-    <p>The location defined in the microsyntax can be converted to an Activity Streams <code>Place</code> object, and embedded in the <code>location</code> property of the encoding object. The <code>Place</code> object can have a</p>
+      <p>The location defined in the microsyntax can be converted to an Activity Streams <code>Place</code> object, and
+        embedded in the <code>location</code> property of the encoding object. The <code>Place</code> object can have a
+      </p>
 
-    <aside class="example">
-      <p>Consider the following input microsyntax.</p>
-      <pre class="text">
+      <aside class="example">
+        <p>Consider the following input microsyntax.</p>
+        <pre class="text">
         I am at 87Q8GC37+86
       </pre>
-      <p>It could be converted to the following ActivityPub object:</p>
-      <pre class="json">
+        <p>It could be converted to the following ActivityPub object:</p>
+        <pre class="json">
         {
           "@context": [
             "https://www.w3.org/ns/activitystreams",
@@ -263,13 +281,14 @@
           }
         }
       </pre>
-    </aside>
+      </aside>
+    </section>
+
   </section>
 
-</section>
-
-<section id='conformance'>
-  <!-- This section is filled automatically by ReSpec. -->
-</section>
+  <section id='conformance'>
+    <!-- This section is filled automatically by ReSpec. -->
+  </section>
 </body>
+
 </html>
