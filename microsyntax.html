@@ -38,7 +38,7 @@
   <h1 id="title">Geographical Microsyntax</h1>
   <section id='abstract'>
     <p>
-      This document identifies two geographical notation formats that may be appropriate as microsyntax for
+      This document identifies three geographical notation formats that may be appropriate as microsyntax for
       geosocial applications. It lists and describes each such format. It also provides guidance on how to apply
       microsyntax to ActivityPub content and objects.
     </p>
@@ -170,6 +170,62 @@
 
     </section>
 
+    <section id="geoslash">
+
+      <p>
+        Without automated help, looking up and encoding lat/lon pairs or OpenStreetMap ids for a location can be tedious
+        for users.
+      </p>
+
+      <p><b>Geoslash</b> is a microformat for treating natural-language strings as location identifiers. Geoslash lets a
+        user trade some accuracy and precision for ease of authoring. Saying "I am in /Berlin/" sets the location
+        to Berlin. It&apos;s up to downstream processors to use contextual information to decide if that means <a
+          href="https://www.openstreetmap.org/relation/62422">Berlin, Germany</a> or <a
+          href="https://www.openstreetmap.org/node/2397673211">Cafe Berlin</a> in San Juan, Puerto Rico.
+      </p>
+
+      <p>
+        The original proposal for Geoslash included a time aspect: "I am in /Berlin: this week/". How to treat the time aspect of Geoslash microsyntax is outside the scope of this document. Geosocial processors can simply omit the time aspect of the Geoslash data.
+      </p>
+
+      <p>
+        One possible resolution for a Geoslash item is to use a search engine like <a href="https://nominatim.org">Nominatim</a> to resolve the text into a likely OpenStreetMap node, way or relation, and then link to the page or ActivityPub object for that OSM identifier.
+      </p>
+
+      <table>
+        <tr>
+          <td>Documentation</td>
+          <td><a href="https://web.archive.org/web/20100409010333/http://microsyntax.pbworks.com/Geoslash">Geoslash</a></td>
+        </tr>
+        <tr>
+          <td>Pattern(s)</td>
+          <td>
+            <ul>
+              <li>Opening / followed by natural language text to a closing slash or end of text</li>
+              <li>Opening / followed by natural language text to a closing colon or end of text</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>Examples</td>
+          <td>
+            <ul>
+              <li>Here is a photo of /Mission Viejo, CA/ with birds</li>
+              <li>I just checked in for my flight /YVR</li>
+              <li>I will be in /Hong Kong: July 17-24/ if you&apos;d like to meet</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>Web page URI template</td>
+          <td>https://www.openstreetmap.org/{type}/{number}</td>
+        </tr>
+        <tr>
+          <td>ActivityPub object URI template</td>
+          <td>https://places.pub/{type}/{number}</td>
+        </tr>
+      </table>
+    </section>
   </section>
 
   <section>
@@ -213,13 +269,26 @@
         Wow, that was a tough climb! &lt;a href="https://openstreetmap.com/node/4338669222"&gt;Half Dome&lt;/a&gt;
       </pre>
       </aside>
+
+      <aside class="example">
+        <p>Consider the following input microsyntax.</p>
+        <pre class="text">
+        Let&apos;s go to /Geneva/ together!
+      </pre>
+        <p>It could be converted to the following HTML:</p>
+        <pre class="html">
+        Let&apos;s go to &lt;a href="https://www.openstreetmap.org/relation/1685488"&gt;Geneva&lt;/a&gt; together!
+      </pre>
+      </aside>
+
     </section>
 
     <section id="location">
       <h3><code>location</code> property</h3>
 
       <p>The location defined in the microsyntax can be converted to an Activity Streams <code>Place</code> object, and
-        embedded in the <code>location</code> property of the encoding object. The <code>Place</code> object can have <code>id</code> or <code>url</code> properties.
+        embedded in the <code>location</code> property of the encoding object. The <code>Place</code> object can have
+        <code>id</code> or <code>url</code> properties.
       </p>
 
       <aside class="example">
@@ -227,7 +296,8 @@
         <pre class="text">
         I am at 87Q8GC37+86
       </pre>
-        <p>It could be converted to the following ActivityPub object. Note that the <code>Place</code> generated is anonymous.</p>
+        <p>It could be converted to the following ActivityPub object. Note that the <code>Place</code> generated is
+          anonymous.</p>
         <pre class="json">
         {
           "@context": [
@@ -277,6 +347,34 @@
             "type": "Place",
             "name": "Half Dome",
             "id": "https://places.pub/node/4338669222"
+          }
+        }
+      </pre>
+      </aside>
+
+
+      <aside class="example">
+        <p>Consider the following input microsyntax.</p>
+        <pre class="text">
+         Let&apos;s go to /Geneva/ together!
+      </pre>
+        <p>It could be converted to the following ActivityPub object.</p>
+        <pre class="json">
+        {
+          "@context": [
+            "https://www.w3.org/ns/activitystreams",
+            "https://swicg.github.io/geosocial/geosocial"
+          ],
+          "id": "https://social.example/note/67890",
+          "type": "Note",
+          "source": {
+            "content": "Let&apos;s go to /Geneva/ together!"
+          },
+          "content": "Let&apos;s go to &lt;a href="https://www.openstreetmap.org/relation/1685488"&gt;Geneva&lt;/a&gt; together!"
+          "location": {
+            "type": "Place",
+            "name": "Geneva",
+            "id": "https://places.pub/relation/1685488"
           }
         }
       </pre>
