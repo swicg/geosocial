@@ -117,6 +117,7 @@ Include [Arrive](https://www.w3.org/TR/activitystreams-vocabulary/#dfn-arrive) a
 
 ( _As an ActivityPub user, I want to include microsyntax in my posts to identify locations, so that I can experiment with geosocial features without server or client support._ [#16](https://github.com/swicg/geosocial/issues/16) )
 
+* [Microsyntax](https://swicg.github.io/geosocial/microsyntax.html)
 * [Open Location Codes](https://en.wikipedia.org/wiki/Open_Location_Code) (OLC) also known as [Plus Codes](https://maps.google.com/pluscodes/)
 
 ## Additional Use Cases
