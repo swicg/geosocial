@@ -9,19 +9,22 @@
       defer
     ></script>
     <script class="remove">
-      // All config options at https://respec.org/docs/
       var respecConfig = {
-        specStatus: "CG-DRAFT",
-        editors: [
-          {
-            name: "Evan Prodromou",
-            url: "https://socialwebfoundation.org/authors/evanprodromou",
-          },
-        ],
-        github: "swicg/geosocial",
-        shortName: "ap-personal-places",
-        xref: "web-platform",
-        group: "socialcg",
+        specStatus: "unofficial",
+        group: "cg/socialcg",
+        shortName: "geosocial-personal-places",
+        edDraftURI: "https://swicg.github.io/geosocial/personal-places",
+
+        editors: [{
+          name: "Evan Prodromou",
+          url: "https://socialwebfoundation.org/authors/evanprodromou",
+          w3cid: 43626
+        }],
+        github: {
+          repoURL: "https://github.com/swicg/geosocial",
+          branch: "main"
+        },
+        xref: ["web-platform", "activitystreams-vocabulary", "activitystreams-core", "activitypub"]
       };
     </script>
   </head>
